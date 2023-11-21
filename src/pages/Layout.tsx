@@ -6,14 +6,19 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <div style={{
-        display: 'flex', justifyContent: "center",
-        backgroundColor: "whitesmoke"
-      }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#2A6478",
+          padding: "4rem 2rem 6rem 2rem"
+        }}
+      >
         <div
           style={{
             minHeight: "83vh",
-            backgroundColor: "purple",
+            backgroundColor: "#2A6478",
             width: "92%",
           }}
         >
