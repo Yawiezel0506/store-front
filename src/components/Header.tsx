@@ -1,11 +1,11 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+// import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
+// import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -21,49 +21,51 @@ import SignUp from "./SignUp";
 import { useAppSelector, useAppDispatch } from "../rtk/hooks";
 import { resetUserName } from "../rtk/userNameSlice";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import axios from "axios";
+import { Autocomplete, TextField } from "@mui/material";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
+// const Search = styled("div")(({ theme }) => ({
+//   position: "relative",
+//   borderRadius: theme.shape.borderRadius,
+//   backgroundColor: alpha(theme.palette.common.white, 0.15),
+//   "&:hover": {
+//     backgroundColor: alpha(theme.palette.common.white, 0.25),
+//   },
+//   marginRight: theme.spacing(2),
+//   marginLeft: 0,
+//   width: "100%",
+//   [theme.breakpoints.up("sm")]: {
+//     marginLeft: theme.spacing(3),
+//     width: "auto",
+//   },
+// }));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+// const SearchIconWrapper = styled("div")(({ theme }) => ({
+//   padding: theme.spacing(0, 2),
+//   height: "100%",
+//   position: "absolute",
+//   pointerEvents: "none",
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+// }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+// const StyledInputBase = styled(InputBase)(({ theme }) => ({
+//   color: "inherit",
+//   "& .MuiInputBase-input": {
+//     padding: theme.spacing(1, 1, 1, 0),
+//     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+//     transition: theme.transitions.create("width"),
+//     width: "100%",
+//     [theme.breakpoints.up("md")]: {
+//       width: "20ch",
+//     },
+//   },
+// }));
 
 export default function PrimarySearchAppBar() {
   const [openCart, setOpenCart] = React.useState(false);
-
+  const Navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -205,6 +207,37 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
     </Menu>
   );
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [searchResults, setSearchResults] = React.useState<any[]>([]);
+
+  const handleSearch = async (searchQuery: string) => {
+    console.log("Sending search request for:", searchQuery); // לוג לפני השליחה
+    try {
+      const response = await axios.get(`https://store-back-3.onrender.com/api/products`);
+      console.log("Response from the server:", response); // לוג אחרי קבלת התגובה
+  
+      if (!Array.isArray(response.data)) {
+        throw new Error("Response is not an array");
+      }
+  
+      console.log("Processing response..."); // לוג לפני העיבוד
+      const searchItems = response.data.map(banner => ({
+        label: banner.title, // הטקסט שיוצג
+        id: banner.id // מזהה הבאנר
+      }));
+      console.log("Processed search items:", searchItems); // לוג אחרי העיבוד
+  
+      setSearchResults(searchItems);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    // קוד לטעינת תוצאות ראשוניות, אם נדרש
+  }, []);
+
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -225,18 +258,52 @@ export default function PrimarySearchAppBar() {
               QuadBros Market
             </Typography>
           </div>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              sx={{
-                fontFamily: "Fira Sans",
-              }}
-            />
-          </Search>
+          <Autocomplete
+            freeSolo
+            options={searchResults}
+            getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
+            onChange={(event, value) => {
+              if (typeof value !== 'string' && value?.id) {
+                Navigate(`store/product/${value.id}`);
+              }
+            }}
+            onInputChange={(event, newInputValue) => {
+              if (newInputValue.length > 2) {
+                handleSearch(newInputValue);
+              }
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Search Product"
+                InputProps={{
+                  ...params.InputProps,
+                  type: 'search',
+                  startAdornment: <SearchIcon sx={{ color: "white", marginRight: "10px" }} />,
+                }}
+                sx={{
+                  width: 300,
+                  backgroundColor: '#333', // Dark grey
+                  borderRadius: '4px',
+                  color: 'white', // Light text
+                  '.MuiInputLabel-root': { // Label color
+                    color: 'white',
+                  },
+                  '.MuiOutlinedInput-root': { // Border color
+                    '& fieldset': {
+                      borderColor: 'white',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: 'white',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: 'white',
+                    },
+                  },
+                }}
+              />
+            )}
+          />
 
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
