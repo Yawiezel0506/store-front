@@ -1,5 +1,5 @@
 import { Alert, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { styleButton } from "../style/login&Signin";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -8,7 +8,11 @@ import { useAppDispatch, useAppSelector } from "../rtk/hooks";
 import { Edit } from '../interfaces/users'
 import EditNoteIcon from '@mui/icons-material/EditNote';
 
-const EditDetails = () => {
+interface Props {
+    close: () => void
+}
+
+const EditDetails:FC<Props> = ({close}) => {
     const [openAlertEmail, setOpenAlertEmail] = useState(false);
 
     const [open, setOpen] = useState(false);
@@ -71,6 +75,7 @@ const EditDetails = () => {
                     localStorage.setItem('email', details.email)
                     notify()
                     setOpen(false)
+                    close()
                 }
             } catch (error) {
                 console.error("Error during registration:", error);

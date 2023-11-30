@@ -8,7 +8,7 @@
 }
 
 .scrolling-container {
-  animation: scroll 280s linear infinite;
+  animation: scroll 110s linear infinite;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
