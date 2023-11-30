@@ -1,5 +1,4 @@
 import "./home.css"
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Category } from "../interfaces/category";
 import {
@@ -15,57 +14,29 @@ import { render } from "../rtk/cartSlice";
 import { useNavigate } from "react-router-dom";
 import HomeSkeleton from "../components/HomeSkeleton";
 import { cardCategory, pHello } from "../style/home";
-interface Banner {
-  author: string;
-  category: string;
-  createdAt: string;
-  id: number;
-  image: {
-    alt: string;
-    url: string;
-  };
-  productID: number;
-  rating: number;
-  sale: number;
-  text: string;
-  _id: string;
-}
+import { bannerCard, class_scrolling_container, hide_scrollbar } from "../style/banners";
+
 
 const Home = () => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const baseURL = import.meta.env.VITE_SERVER_API;
+
+  const categoriesFromRTK: Category[] = useAppSelector((state) => state.categoryAndBanners.category)
+  const bannersFromRTK: Banner[] = useAppSelector((state) => state.categoryAndBanners.banners)
 
   useEffect(() => {
-    (async () => {
-      try {
-        const resp = await axios.get(`${baseURL}/api/categories`);
-        const { data } = resp;
-        setCategories(data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [baseURL]);
+    setBanners(bannersFromRTK)
+  }, [bannersFromRTK])
 
   useEffect(() => {
-    (async () => {
-      try {
-        const resp = await axios.get(
-          `https://serverbanners.onrender.com/api/banners`
-        );
-        const { data } = resp;
-        setBanners(data);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
-  console.log(banners);
+    if (categoriesFromRTK.length) {
+      setCategories(categoriesFromRTK)
+      setLoading(false)
+    }
+  }, [categoriesFromRTK])
 
   useEffect(() => {
     dispatch(render());
@@ -74,56 +45,33 @@ const Home = () => {
   const clickToCard = (cat: string) => {
     navigate(`/store/products/${cat}`);
   };
+
   const handleClick = (productId: string) => {
     navigate(`/store/product/${productId}`);
   };
 
   const userName = useAppSelector((state) => state.userName.userName)
 
- 
- 
-
   return (
     <>
-       {userName && <Typography variant="h1" align="center" gutterBottom style={pHello}>
+      {userName && <Typography variant="h1" align="center" gutterBottom style={pHello}>
         Hello {userName}
       </Typography>}
       {banners && banners.length > 0 && (
         <>
-         
 
           <div
             className="hide-scrollbar"
-            style={{
-              display: "flex",
-              overflowX: "auto",
-              backgroundColor: "#E0E0E0",
-              border: "2px solid #B3B3B3",
-              padding: "1.2rem",
-              marginBottom: "2rem",
-              boxShadow: "0px 3px 5px rgba(0, 0, 0, 0.2)",
-            }}
+            style={hide_scrollbar}
           >
             <div
               className="scrolling-container"
-              style={{
-                display: "flex",
-                flexWrap: "nowrap",
-              }}
+              style={class_scrolling_container}
             >
               {banners.map((banner, index) => (
                 <div
                   key={index}
-                  style={{
-                    minWidth: "300px",
-                    flexShrink: 0,
-                    margin: "5px",
-                    position: "relative",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                  }}
+                  style={bannerCard}
                 >
                   <img
                     className="banner-image"

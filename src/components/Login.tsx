@@ -68,7 +68,7 @@ const LogIn = () => {
           password: password,
         };
         const response = await axios.post(
-          `${baseURL}/api/users/login`,
+          `${baseURL}/store/api/users/login`,
           userData
         );
         if (response.data) {
@@ -136,8 +136,8 @@ const LogIn = () => {
             type="email"
             fullWidth
             required
-            error={email.length === 0}
-            helperText={email.length === 0 ? "This is a required field." : ""}
+            error={!email}
+            helperText={!email ? "This is a required field." : ""}
           />
           <Collapse in={openAlertEmail}>
             <Alert severity="error" sx={{ margin: "0.5em" }}>
@@ -156,9 +156,9 @@ const LogIn = () => {
             type={showPassword ? "text" : "password"}
             fullWidth
             required
-            error={password.length === 0}
+            error={!password}
             helperText={
-              password.length === 0 ? "This is a required field." : ""
+              !password ? "This is a required field." : ""
             }
             InputProps={{
               endAdornment: (

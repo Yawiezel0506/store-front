@@ -4,6 +4,7 @@ import cartReducer from "./cartSlice";
 import userNameReducer from "./userNameSlice";
 import signUpReducer from "./flagSignUpSlice";
 import logInReducer from "./flagLogInSlice";
+import categoryAndBannersReducer from "./category&banners";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     userName: userNameReducer,
     openSignUp: signUpReducer,
     openLogIn: logInReducer,
+    categoryAndBanners: categoryAndBannersReducer
   },
 });
 

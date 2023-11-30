@@ -1,32 +1,22 @@
-import { Alert, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { Alert, Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { styleButton } from "../style/login&Signin";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { setUserName } from "../rtk/userNameSlice";
 import { useAppDispatch, useAppSelector } from "../rtk/hooks";
-
-
-interface Edit {
-    _id: null | string
-    firstName: null | string,
-    lastName: null | string,
-    userName: null | string,
-    email: null | string,
-    password: string
-}
-
+import { Edit } from '../interfaces/users'
+import EditNoteIcon from '@mui/icons-material/EditNote';
 
 const EditDetails = () => {
     const [openAlertEmail, setOpenAlertEmail] = useState(false);
 
     const [open, setOpen] = useState(false);
     const [details, setDetails] = useState<Edit>({
-        _id: null,
-        firstName: null,
-        lastName: null,
-        userName: null,
-        email: null,
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
         password: '',
     })
 
@@ -36,10 +26,9 @@ const EditDetails = () => {
     const userFromRTK = useAppSelector((state) => state.userName)
 
     useEffect(() => {
-        setDetails((prev) => ({ ...prev, _id: userFromRTK.userId }))
         setDetails((prev) => ({ ...prev, firstName: userFromRTK.firstName }))
         setDetails((prev) => ({ ...prev, lastName: userFromRTK.lastName, }))
-        setDetails((prev) => ({ ...prev, userName: userFromRTK.userName }))
+        setDetails((prev) => ({ ...prev, username: userFromRTK.userName }))
         setDetails((prev) => ({ ...prev, email: userFromRTK.email }))
     }, [userFromRTK])
 
@@ -52,24 +41,32 @@ const EditDetails = () => {
 
 
     const notify = () => {
-        toast.success("You've logged in successfully!", {
+        toast.success("The details have been successfully changed!", {
             theme: "colored"
         })
     }
 
     const handelSubmit = async () => {
         if (details.email && validateEmail(details.email)) {
+            const oldUser = {
+                firstName: userFromRTK.firstName,
+                lastName: userFromRTK.lastName,
+                username: userFromRTK.userName,
+                email: userFromRTK.email,
+                password: ''
+            }
             const editUser = [
-                userFromRTK,
+                oldUser,
                 details
             ]
             try {
                 const response = await axios.post(
-                    `${baseURL}/api/users/edit`,
+                    `${baseURL}/store/api/users/edit`,
                     editUser
                 );
                 if (response.data) {
                     const userName = response.data.user;
+                    Object.assign(userName, { _id: userFromRTK.userId })
                     dispatch(setUserName(userName));
                     localStorage.setItem('email', details.email)
                     notify()
@@ -86,7 +83,9 @@ const EditDetails = () => {
 
     return (
         <>
-            <Button variant="contained" sx={styleButton} onClick={() => setOpen(true)}>click me</Button>
+            <IconButton onClick={() => setOpen(true)} >
+                <EditNoteIcon />
+            </IconButton>
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle style={{ textAlign: 'center' }}>EDIT DETAILS</DialogTitle>
                 <DialogContent>
@@ -100,9 +99,9 @@ const EditDetails = () => {
                         type="name"
                         fullWidth
                         required
-                        error={details.firstName === null || details.firstName.length === 0}
+                        error={!details.firstName}
                         helperText={
-                            details.firstName === null || details.firstName.length === 0 ? "This is a required field." : ""
+                            !details.firstName ? "This is a required field." : ""
                         }
                     />
                     <TextField
@@ -114,23 +113,23 @@ const EditDetails = () => {
                         type="name"
                         fullWidth
                         required
-                        error={details.lastName === null || details.lastName.length === 0}
+                        error={!details.lastName}
                         helperText={
-                            details.lastName === null || details.lastName.length === 0 ? "This is a required field." : ""
+                            !details.lastName ? "This is a required field." : ""
                         }
                     />
                     <TextField
-                        onChange={(e) => setDetails((prev) => ({ ...prev, userName: e.target.value }))}
-                        value={details.userName}
+                        onChange={(e) => setDetails((prev) => ({ ...prev, username: e.target.value }))}
+                        value={details.username}
                         margin="dense"
                         id="name"
                         label="user name"
                         type="name"
                         fullWidth
                         required
-                        error={details.userName === null || details.userName.length === 0}
+                        error={!details.username}
                         helperText={
-                            details.userName === null || details.userName.length === 0 ? "This is a required field." : ""
+                            !details.username  ? "This is a required field." : ""
                         }
                     />
                     <TextField
@@ -145,8 +144,8 @@ const EditDetails = () => {
                         type="email"
                         fullWidth
                         required
-                        error={details.email === null || details.email.length === 0}
-                        helperText={details.email === null || details.email.length === 0 ? "This is a required field." : ""}
+                        error={!details.email}
+                        helperText={!details.email ? "This is a required field." : ""}
                     />
                     <Collapse in={openAlertEmail}>
                         <Alert severity="error" sx={{ margin: "0.5em" }}>

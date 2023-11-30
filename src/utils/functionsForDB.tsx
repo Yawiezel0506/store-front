@@ -1,12 +1,15 @@
-import {  useAppDispatch } from "../rtk/hooks";
+import { useAppDispatch } from "../rtk/hooks";
 import axios from "axios";
 import { useEffect } from "react";
 import { setProducts } from "../rtk/productsSlice";
+import { setBanners, setCategory } from "../rtk/category&banners";
 // import { CartProduct } from "../rtk/cartSlice";
 // import { store } from "../rtk/store";
 // import { useState } from "react";
 // import { useDispatch } from "react-redux";
 // import { setCart } from "../rtk/cartSlice2";
+
+const baseUrl = import.meta.env.VITE_SERVER_API || "https://store-back-3.onrender.com"
 
 export function ConnectToData() {
   const dispatch = useAppDispatch();
@@ -14,15 +17,47 @@ export function ConnectToData() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://api-store-f2id.onrender.com/api/products"
+          `${baseUrl}/store/api/products`
         );
-        dispatch(setProducts(response.data));
+        if(response.data){
+          const { data } = response;
+          dispatch(setProducts(data));
+        }
       } catch (error) {
         console.error(error);
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+}
+
+
+export const ConnectBanners = async () => {
+  const dispatch = useAppDispatch();
+
+  try {
+    const resp = await axios.get(`https://serverbanners.onrender.com/banner/api/banners`);
+    if(resp.data){
+      const { data } = resp;
+      dispatch(setBanners(data));
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+
+export const ConnectCategory = async () => {
+  const dispatch = useAppDispatch();
+  
+  try {
+    const resp = await axios.get(`${baseUrl}/store/api/categories`);
+    const { data } = resp;
+    dispatch(setCategory(data))
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 

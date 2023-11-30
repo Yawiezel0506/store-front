@@ -1,22 +1,22 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { UserRegister } from "../interfaces/userRegister";
+import { UserRegister } from "../interfaces/users";
 
 interface UserNameSlice {
   flag: boolean;
-  userName: string | null;
-  userId: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string | null;
+  userName: string ;
+  userId: string ;
+  firstName: string ;
+  lastName: string ;
+  email: string;
 }
 
 const initialState: UserNameSlice = {
   flag: false,
-  userName: null,
-  userId: null,
-  firstName: null,
-  lastName: null,
-  email: null
+  userName: '',
+  userId: '',
+  firstName: '',
+  lastName: '',
+  email: ''
 };
 
 export const userNameSlice = createSlice({
@@ -33,11 +33,13 @@ export const userNameSlice = createSlice({
     },
     resetUserName: (state) => {
       state.flag = false
-      state.userName = null
-      state.userId = null
-      state.firstName = null
-      state.lastName = null
-      state.email = null
+      state.userName = ''
+      state.userId = ''
+      state.firstName = ''
+      state.lastName = ''
+      state.email = ''
+      localStorage.removeItem('email')
+      localStorage.removeItem('password')
     },
   },
 });

@@ -97,14 +97,14 @@ const CartTable: React.FC<CartProps> = ({ props }) => {
     <>
       {productsCartFromData.length ? (
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <Table sx={{ minWidth: 700, minHeight:100 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>ITEMS</StyledTableCell>
-                <StyledTableCell align="center">QUANTITY</StyledTableCell>
-                <StyledTableCell align="center">AVAILABILITY</StyledTableCell>
-                <StyledTableCell align="right">TOTAL PRICE</StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell style={{backgroundColor: 'rgb(35,47,62)'}}>ITEMS</StyledTableCell>
+                <StyledTableCell align="center" style={{backgroundColor: 'rgb(35,47,62)'}}>QUANTITY</StyledTableCell>
+                <StyledTableCell align="center" style={{backgroundColor: 'rgb(35,47,62)'}}>AVAILABILITY</StyledTableCell>
+                <StyledTableCell align="right" style={{backgroundColor: 'rgb(35,47,62)'}}>TOTAL PRICE</StyledTableCell>
+                <StyledTableCell align="right" style={{backgroundColor: 'rgb(35,47,62)'}}>
                   ADDITIONAL ACTIONS
                 </StyledTableCell>
               </TableRow>

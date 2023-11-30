@@ -61,7 +61,7 @@ export default function SignIn() {
           confirmPassword: confirmPassword,
         };
         const response = await axios.post(
-          `${baseURL}/api/users/register`,
+          `${baseURL}/store/api/users/register`,
           userData
         );
         if (response.data) {
