@@ -35,8 +35,6 @@ export function filterProducts(
   return newFilteredProducts ?? null;
 }
 
-
-
 export function getUniqueAttributes(
   products: Product[]
 ): Record<string, (string | number)[]> {
@@ -57,7 +55,13 @@ export function getUniqueAttributes(
 
 const baseURL = import.meta.env.VITE_SERVER_API;
 
-export function connectToData(category: string | undefined, setLoading: React.Dispatch<React.SetStateAction<boolean>>, setProducts: React.Dispatch<React.SetStateAction<Product[] | null | undefined>>) {
+export function connectToData(
+  category: string | undefined,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  setProducts: React.Dispatch<
+    React.SetStateAction<Product[] | null | undefined>
+  >
+) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -72,18 +76,15 @@ export function connectToData(category: string | undefined, setLoading: React.Di
   fetchData();
 }
 
-
-export function sendOrderDetails(order: SendOrderDetails) {
-  const fetchOrder = async () => {
-    try {
-      const response = await axios.post(
-        `${baseURL}/orders`,
-        order
-      );
+export async function sendOrderDetails(order: SendOrderDetails) {
+  try {
+    const response = await axios.post(`${baseURL}/orders`, order);
+    if (response.data) {
       console.log(response.data);
-    } catch (error) {
-      console.error(error);
+      return true;
     }
-  };
-  fetchOrder();
+  } catch (error) {
+    console.error(error);
+  }
+  return false;
 }

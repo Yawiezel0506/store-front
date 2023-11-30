@@ -15,6 +15,8 @@ import { setOpen as openLogin } from "../rtk/flagLogInSlice";
 import { sendOrderDetails } from "../utils/function";
 import { stylePayment } from "../style/payment";
 import { styleButton } from "../style/login&Signin";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Payment: React.FC<Total> = ({ total }) => {
   const [open, setOpen] = useState(false);
@@ -46,13 +48,26 @@ const Payment: React.FC<Total> = ({ total }) => {
     },
   };
 
+  const notify = () => {
+    toast.success("The purchase was made successfully!", {
+      theme: "colored"
+    })
+  }
+
   const flag = useAppSelector((state) => state.userName.flag);
 
-  const handelSendOrder = () => {
+  const handelSendOrder = async () => {
     if (flag) {
-      dispatch(removeCart());
-      handleClose();
-      sendOrderDetails(orderDetails);
+      try {
+        const submit = await sendOrderDetails(orderDetails);
+        if (submit) {
+          dispatch(removeCart());
+          handleClose();
+          notify()
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       dispatch(openLogin(true));
     }
@@ -113,6 +128,18 @@ const Payment: React.FC<Total> = ({ total }) => {
           </Button>
         </Box>
       </Modal>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </Box>
   );
 };

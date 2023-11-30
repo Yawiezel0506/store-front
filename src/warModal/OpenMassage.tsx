@@ -28,7 +28,7 @@ const OpenMassage = () => {
   }, []);
 
   return (
-    <Modal open={open}>
+    <Modal open={open} onClose={() => setOpen(false)}>
       <Box sx={styleModal}>
         <Paper
           elevation={3}
