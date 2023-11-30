@@ -17,7 +17,7 @@ export function ConnectToData() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${baseUrl}/store/api/products`
+          `${baseUrl}/products`
         );
         if(response.data){
           const { data } = response;
@@ -28,15 +28,16 @@ export function ConnectToData() {
       }
     };
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }
 
 
-export const connectBanners = async () => {
+export const ConnectBanners = async () => {
   const dispatch = useAppDispatch();
 
   try {
-    const resp = await axios.get(`https://serverbanners.onrender.com/banner/api/banners`);
+    const resp = await axios.get(`https://serverbanners.onrender.com/banners`);
     if(resp.data){
       const { data } = resp;
       dispatch(setBanners(data));
@@ -47,11 +48,11 @@ export const connectBanners = async () => {
 };
 
 
-export const connectCategory = async () => {
+export const ConnectCategory = async () => {
   const dispatch = useAppDispatch();
   
   try {
-    const resp = await axios.get(`${baseUrl}/store/api/categories`);
+    const resp = await axios.get(`${baseUrl}/categories`);
     const { data } = resp;
     dispatch(setCategory(data))
   } catch (error) {

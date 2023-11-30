@@ -61,7 +61,7 @@ const EditDetails = () => {
             ]
             try {
                 const response = await axios.post(
-                    `${baseURL}/store/api/users/edit`,
+                    `${baseURL}/users/edit`,
                     editUser
                 );
                 if (response.data) {
@@ -136,7 +136,7 @@ const EditDetails = () => {
                         required
                         error={!details.username}
                         helperText={
-                            !details.username ? "This is a required field." : ""
+                            !details.username  ? "This is a required field." : ""
                         }
                     />
                     <TextField

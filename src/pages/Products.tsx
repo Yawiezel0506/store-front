@@ -170,7 +170,7 @@ const Products = () => {
           alignItems="flex-start"
         >
           {Object.entries(attributes).map(([key, value]) => (
-            <Grid item>
+            <Grid item key={Date.now() * Math.random()}>
               <Typography variant="subtitle1">{key}</Typography>
               {value.map((item) => (
                 <FormGroup key={item}>
@@ -232,7 +232,7 @@ const Products = () => {
                     <Typography variant="h3" sx={typographyH3PriceStyle}>
                       ${product.price}
                     </Typography>
-                    {!addedToCart && <IconButton sx={buttonAddToCart} > <AddShoppingCartIcon sx={buttonAddToCart} onClick={() => addToCart(product)} /></IconButton>}
+                    {!addedToCart && <IconButton onClick={() => addToCart(product)} sx={buttonAddToCart} > <AddShoppingCartIcon sx={buttonAddToCart}  /></IconButton>}
                     {addedToCart &&
                       <Box>
                         <IconButton sx={buttonAddToCart} onClick={() => incrementQuantity(product)}>
