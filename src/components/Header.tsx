@@ -286,11 +286,14 @@ export default function PrimarySearchAppBar() {
             options={searchResults}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.label)}
             onChange={(event, value) => {
+              console.log(event);
+              
               if (typeof value !== 'string' && value?.id) {
                 Navigate(`store/product/${value.id}`);
               }
             }}
             onInputChange={(event, newInputValue) => {
+              console.log(event);
               if (newInputValue.length > 2) {
                 handleSearch(newInputValue);
               }
