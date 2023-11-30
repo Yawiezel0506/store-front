@@ -236,7 +236,7 @@ export default function PrimarySearchAppBar() {
   const handleSearch = async (searchQuery: string) => {
     console.log("Sending search request for:", searchQuery); // לוג לפני השליחה
     try {
-      const response = await axios.get(`https://store-back-3.onrender.com/store/api/products`);
+      const response = await axios.get(`https://store-back-3.onrender.com/products`);
       console.log("Response from the server:", response); // לוג אחרי קבלת התגובה
   
       if (!Array.isArray(response.data)) {
