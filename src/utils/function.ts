@@ -61,7 +61,7 @@ export function connectToData(category: string | undefined, setLoading: React.Di
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${baseURL}/store/api/products?category=${category}`
+        `${baseURL}/products?category=${category}`
       );
       setProducts(response.data);
       setLoading(false);
@@ -77,7 +77,7 @@ export function sendOrderDetails(order: SendOrderDetails) {
   const fetchOrder = async () => {
     try {
       const response = await axios.post(
-        `${baseURL}/store/api/orders`,
+        `${baseURL}/orders`,
         order
       );
       console.log(response.data);
