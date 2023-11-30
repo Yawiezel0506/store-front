@@ -10,7 +10,7 @@ export interface UserRegister {
 export interface Edit {
   firstName: string;
   lastName: string;
-  userName: string;
+  username: string;
   email: string;
   password: string;
 }

@@ -15,7 +15,7 @@ const EditDetails = () => {
     const [details, setDetails] = useState<Edit>({
         firstName: '',
         lastName: '',
-        userName: '',
+        username: '',
         email: '',
         password: '',
     })
@@ -28,7 +28,7 @@ const EditDetails = () => {
     useEffect(() => {
         setDetails((prev) => ({ ...prev, firstName: userFromRTK.firstName }))
         setDetails((prev) => ({ ...prev, lastName: userFromRTK.lastName, }))
-        setDetails((prev) => ({ ...prev, userName: userFromRTK.userName }))
+        setDetails((prev) => ({ ...prev, username: userFromRTK.userName }))
         setDetails((prev) => ({ ...prev, email: userFromRTK.email }))
     }, [userFromRTK])
 
@@ -51,7 +51,7 @@ const EditDetails = () => {
             const oldUser = {
                 firstName: userFromRTK.firstName,
                 lastName: userFromRTK.lastName,
-                userName: userFromRTK.userName,
+                username: userFromRTK.userName,
                 email: userFromRTK.email,
                 password: ''
             }
@@ -83,7 +83,14 @@ const EditDetails = () => {
 
     return (
         <>
-            <IconButton onClick={() => setOpen(true)} >
+            <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                color="inherit"
+                onClick={() => setOpen(true)}
+            >
                 <EditNoteIcon />
             </IconButton>
             <Dialog open={open} onClose={() => setOpen(false)}>
@@ -119,17 +126,17 @@ const EditDetails = () => {
                         }
                     />
                     <TextField
-                        onChange={(e) => setDetails((prev) => ({ ...prev, userName: e.target.value }))}
-                        value={details.userName}
+                        onChange={(e) => setDetails((prev) => ({ ...prev, username: e.target.value }))}
+                        value={details.username}
                         margin="dense"
                         id="name"
                         label="user name"
                         type="name"
                         fullWidth
                         required
-                        error={!details.userName}
+                        error={!details.username}
                         helperText={
-                            !details.userName  ? "This is a required field." : ""
+                            !details.username ? "This is a required field." : ""
                         }
                     />
                     <TextField
